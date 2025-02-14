@@ -1,0 +1,116 @@
+Setting Up SSH and Linking GitHub Repository on Red Hat VM
+
+1️⃣ Check for SSH Directory
+
+By default, the .ssh directory should be present in your home directory. If it’s missing, follow these steps:
+
+Check if .ssh exists:
+
+ls -la ~
+
+If you don’t see .ssh, create it manually:
+
+mkdir -m 700 ~/.ssh
+
+2️⃣ Generate an SSH Key
+
+If you haven’t generated an SSH key before, create one:
+
+ssh-keygen -t ed25519 -C "your-email@example.com"
+
+Press Enter to accept the default location (~/.ssh/id_ed25519).
+
+When prompted, you can enter a passphrase (optional for extra security).
+
+3️⃣ Add SSH Key to GitHub
+
+Retrieve the public key:
+
+cat ~/.ssh/id_ed25519.pub
+
+Copy the output and add it to GitHub → Settings → SSH and GPG keys → New SSH Key.
+
+4️⃣ Test SSH Connection
+
+Run:
+
+ssh -T git@github.com
+
+If successful, you should see:
+
+Hi username! You've successfully authenticated, but GitHub does not provide shell access.
+
+5️⃣ Clone or Link Your Repository
+
+Clone a Repository Using SSH
+
+git clone git@github.com:your-username/your-repo.git
+
+Change Directory to Your Repo
+
+cd your-repo
+
+If Repository Already Exists (Switch to SSH)
+
+Check current remote URL:
+
+git remote -v
+
+If it's using HTTPS, update it:
+
+git remote set-url origin git@github.com:your-username/your-repo.git
+
+6️⃣ Initialize Git and Make Initial Commit
+
+If your repo is empty or newly created, initialize Git:
+
+git init
+
+Then add the remote:
+
+git remote add origin git@github.com:your-username/your-repo.git
+
+Create a main branch and commit:
+
+git checkout -b main
+git add .
+git commit -m "Initial commit"
+
+7️⃣ Push to GitHub
+
+git push -u origin main
+
+8️⃣ Troubleshooting
+
+"src refspec main does not match any"
+
+This happens when no commits exist. Ensure you’ve made a commit before pushing:
+
+git add .
+git commit -m "First commit"
+git push -u origin main
+
+Git Asks for Username and Password Instead of Using SSH
+
+This means you’re using HTTPS instead of SSH. Check the remote URL:
+
+git remote -v
+
+If it starts with https://, switch to SSH:
+
+git remote set-url origin git@github.com:your-username/your-repo.git
+
+SSH Permission Denied (publickey)
+
+Ensure your SSH agent is running:
+
+ssh-agent bash
+ssh-add ~/.ssh/id_ed25519
+
+Re-test connection:
+
+ssh -T git@github.com
+
+After following these steps, your Red Hat VM should be properly linked to GitHub using SSH. 🚀
+
+
